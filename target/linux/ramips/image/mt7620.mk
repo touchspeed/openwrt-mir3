@@ -989,12 +989,15 @@ define Device/xiaomi_miwifi-r3
   BLOCKSIZE := 128k
   PAGESIZE := 2048
   KERNEL_SIZE := 4096k
+  KERNEL := $(KERNEL_DTB) | uImage lzma
   IMAGE_SIZE := 32768k
   UBINIZE_OPTS := -E 5
-  IMAGES += kernel1.bin rootfs0.bin
+  IMAGES := kernel1.bin rootfs0.bin sysupgrade.tar pb-boot.bin
   IMAGE/kernel1.bin := append-kernel | check-size $$$$(KERNEL_SIZE)
   IMAGE/rootfs0.bin := append-ubi | check-size $$$$(IMAGE_SIZE)
-  IMAGE/sysupgrade.bin := sysupgrade-tar | append-metadata
+  IMAGE/sysupgrade.tar := sysupgrade-tar | append-metadata
+  IMAGE/pb-boot.bin := append-kernel | pad-to $$(KERNEL_SIZE) | append-kernel | \
+        pad-to $$(KERNEL_SIZE) | append-ubi
   DEVICE_VENDOR := Xiaomi
   DEVICE_MODEL := Mi Router R3
   DEVICE_PACKAGES := kmod-mt76x2 kmod-usb2 kmod-usb-ohci uboot-envtools
